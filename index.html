@@ -91,18 +91,16 @@
         <!-- Footer Ad -->
         <div class="w-full flex justify-center mb-10">
             <div class="w-[320px] h-[50px] bg-neutral-900 flex items-center justify-center text-neutral-600 text-xs rounded border border-neutral-800">
-                Adsterra 320x50 Banner
                 <script type="text/javascript">
                     atOptions = {
-                        'key' : '73b364c24a261f9683d274119a5fcce3',
+                        'key' : '9469b3944529ec6fca289427dee48428',
                         'format' : 'iframe',
                         'height' : 50,
                         'width' : 320,
                         'params' : {}
                     };
                 </script>
-                <!-- Script commented out to prevent errors in preview, uncomment in prod -->
-                <!-- <script type="text/javascript" src="//www.highperformanceformat.com/73b364c24a261f9683d274119a5fcce3/invoke.js"></script> -->
+                <script type="text/javascript" src="//www.highperformanceformat.com/9469b3944529ec6fca289427dee48428/invoke.js"></script>
             </div>
         </div>
 
@@ -151,26 +149,52 @@
         
         const appContent = document.getElementById('appContent');
 
-        // --- ADSTERRA TEMPLATE ---
+        // --- ADSTERRA DYNAMIC HANDLING ---
+        // Returns a placeholder div that will be populated by injectAds()
         const getAdHtml = () => `
             <div class="w-full flex justify-center my-6">
-                <div class="relative group">
-                    <div class="w-[320px] h-[50px] bg-neutral-900 flex items-center justify-center text-neutral-600 text-xs rounded border border-neutral-800">
-                        Adsterra 320x50 Banner
-                    </div>
-                    <script type="text/javascript">
-                        atOptions = {
-                            'key' : '73b364c24a261f9683d274119a5fcce3',
-                            'format' : 'iframe',
-                            'height' : 50,
-                            'width' : 320,
-                            'params' : {}
-                        };
-                    <\/script>
-                    <!-- <script type="text/javascript" src="//www.highperformanceformat.com/73b364c24a261f9683d274119a5fcce3/invoke.js"><\/script> -->
+                <div class="dynamic-ad-slot w-[320px] h-[50px] bg-neutral-900 flex items-center justify-center text-neutral-600 text-xs rounded border border-neutral-800">
+                    Loading Ad...
                 </div>
             </div>
         `;
+
+        // Function to inject iframe ads into placeholders (required for SPA/Dynamic content)
+        function injectAds() {
+            document.querySelectorAll('.dynamic-ad-slot').forEach(slot => {
+                if (slot.hasAttribute('data-loaded')) return;
+                slot.setAttribute('data-loaded', 'true');
+                slot.innerHTML = '';
+                
+                const iframe = document.createElement('iframe');
+                iframe.style.width = '320px';
+                iframe.style.height = '50px';
+                iframe.style.border = '0';
+                iframe.scrolling = 'no';
+                slot.appendChild(iframe);
+                
+                const doc = iframe.contentWindow.document;
+                doc.open();
+                doc.write(`
+                    <!DOCTYPE html>
+                    <body style="margin:0;padding:0;background-color:#171717;">
+                        <div style="display:flex;justify-content:center;">
+                            <script type="text/javascript">
+                                atOptions = {
+                                    'key' : '9469b3944529ec6fca289427dee48428',
+                                    'format' : 'iframe',
+                                    'height' : 50,
+                                    'width' : 320,
+                                    'params' : {}
+                                };
+                            <\/script>
+                            <script type="text/javascript" src="//www.highperformanceformat.com/9469b3944529ec6fca289427dee48428/invoke.js"><\/script>
+                        </div>
+                    </body>
+                `);
+                doc.close();
+            });
+        }
 
         // --- HELPER FUNCTIONS ---
         window.scrollToSection = (id) => {
@@ -277,6 +301,9 @@
                     </button>
                 </div>
             `;
+
+            // Init Hero Ad
+            injectAds();
 
             // Bind Events
             const searchInput = document.getElementById('searchInput');
@@ -385,6 +412,9 @@
 
             grid.innerHTML = gridHtml;
             loadMoreBtn.classList.toggle('hidden', visibleCount >= filteredPosts.length);
+
+            // Inject ads into new grid slots
+            injectAds();
         }
 
         // --- SINGLE POST ---
@@ -419,12 +449,6 @@
                     contentHtml += getAdHtml();
                 }
             });
-
-            // Fallback: If no [AD] tags were found, we could insert some automatically if needed,
-            // but the requirement says "if no [AD]... simply show article without in-article ads".
-            // However, to maintain revenue, if the admin forgot [AD], we might want default placements.
-            // But per instructions: "If an article has no [AD] in its content, then simply show the article without in-article ads"
-            // So we strictly follow that. The above split logic handles it correctly (parts length will be 1).
 
             // Related
             const related = allPosts.filter(p => p.category === post.category && p.id !== post.id).slice(0, 3);
@@ -514,6 +538,9 @@
                     </div>
                 </article>
             `;
+            
+            // Inject ads into placeholders
+            injectAds();
             
             window.scrollTo(0, 0);
         }
