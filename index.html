@@ -57,21 +57,21 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <!-- Brand -->
-                <a href="user.html" class="flex items-center gap-2 group">
+                <a href="?" class="flex items-center gap-2 group">
                     <img src="logo.png" onerror="this.src='https://placehold.co/40x40/10b981/ffffff?text=RV'" alt="ReelVidsHQ logo" class="h-8 w-8 object-contain rounded transition-transform group-hover:scale-105">
                     <span class="text-xl font-bold text-white tracking-tight uppercase font-display group-hover:text-brand-primary transition-colors">ReelVidsHQ</span>
                 </a>
                 
                 <!-- Desktop Links -->
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="user.html" class="text-sm font-medium hover:text-brand-primary transition-colors text-white">Home</a>
+                    <a href="?" class="text-sm font-medium hover:text-brand-primary transition-colors text-white">Home</a>
                     <a href="#" onclick="window.scrollToSection('categories')" class="text-sm font-medium text-brand-muted hover:text-white transition-colors">Categories</a>
                     <a href="#" onclick="window.scrollToSection('latest')" class="text-sm font-medium text-brand-muted hover:text-white transition-colors">Latest</a>
                     <a href="#footer" class="text-sm font-medium text-brand-muted hover:text-white transition-colors">Contact</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button class="md:hidden text-white p-2" onclick="window.location.reload()">
+                <button class="md:hidden text-white p-2" onclick="window.location.href='?'">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </div>
@@ -90,7 +90,7 @@
     <footer id="footer" class="bg-black border-t border-brand-border mt-12 py-12">
         <!-- Footer Ad -->
         <div class="w-full flex justify-center mb-10">
-            <div class="w-[320px] h-[50px] bg-neutral-900 flex items-center justify-center text-neutral-600 text-xs rounded border border-neutral-800">
+            <div class="w-[320px] h-[50px] bg-neutral-900 flex items-center justify-center text-neutral-600 text-xs rounded border border-neutral-800 overflow-hidden">
                 <script type="text/javascript">
                     atOptions = {
                         'key' : '9469b3944529ec6fca289427dee48428',
@@ -153,7 +153,7 @@
         // Returns a placeholder div that will be populated by injectAds()
         const getAdHtml = () => `
             <div class="w-full flex justify-center my-6">
-                <div class="dynamic-ad-slot w-[320px] h-[50px] bg-neutral-900 flex items-center justify-center text-neutral-600 text-xs rounded border border-neutral-800">
+                <div class="dynamic-ad-slot w-[320px] h-[50px] bg-neutral-900 flex items-center justify-center text-neutral-600 text-xs rounded border border-neutral-800 overflow-hidden">
                     Loading Ad...
                 </div>
             </div>
@@ -199,8 +199,13 @@
         // --- HELPER FUNCTIONS ---
         window.scrollToSection = (id) => {
             const el = document.getElementById(id);
-            if(el) el.scrollIntoView({behavior:'smooth'});
-            else window.location.href = `user.html#${id}`;
+            if(el) {
+                el.scrollIntoView({behavior:'smooth'});
+            } else {
+                // Navigate to home logic, preserving file name (index.html or user.html)
+                // Appends hash to current path but removes query params if any
+                window.location.href = window.location.pathname + `#${id}`;
+            }
         };
 
         // --- INIT ---
@@ -343,7 +348,7 @@
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             ${topFeatured.map(post => `
-                                <a href="user.html?id=${post.id}" class="group relative aspect-video md:aspect-[4/3] rounded-xl overflow-hidden bg-neutral-900 shadow-xl border border-brand-border hover:border-brand-primary/50 transition-all block">
+                                <a href="?id=${post.id}" class="group relative aspect-video md:aspect-[4/3] rounded-xl overflow-hidden bg-neutral-900 shadow-xl border border-brand-border hover:border-brand-primary/50 transition-all block">
                                     <img src="${post.thumbnailUrl}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-50" alt="${post.title}">
                                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent p-6 flex flex-col justify-end">
                                         <div class="flex gap-2 mb-2">
@@ -380,7 +385,7 @@
                 
                 gridHtml += `
                     <article class="bg-brand-card rounded-xl overflow-hidden border border-brand-border hover:border-brand-primary/40 transition-all hover:shadow-2xl hover:-translate-y-1 group flex flex-col h-full">
-                        <a href="user.html?id=${post.id}" class="block relative h-48 overflow-hidden bg-neutral-900">
+                        <a href="?id=${post.id}" class="block relative h-48 overflow-hidden bg-neutral-900">
                             <img src="${post.thumbnailUrl}" alt="${post.title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                             <div class="absolute top-2 right-2 bg-black/80 backdrop-blur text-brand-primary text-xs font-bold px-2 py-1 rounded border border-brand-primary/20 shadow-lg">
                                 ${post.rating}
@@ -392,13 +397,13 @@
                                 <span class="text-xs text-neutral-500 font-medium">${post.releaseYear}</span>
                             </div>
                             <h3 class="text-lg font-bold text-white mb-2 leading-snug font-display group-hover:text-brand-primary transition-colors">
-                                <a href="user.html?id=${post.id}">${post.title}</a>
+                                <a href="?id=${post.id}">${post.title}</a>
                             </h3>
                             <p class="text-brand-muted text-sm line-clamp-3 mb-4 flex-1">${post.shortDescription}</p>
                             
                             <div class="flex items-center justify-between mt-auto pt-4 border-t border-brand-border/50">
                                 <div class="flex gap-1">${tagsHtml}</div>
-                                <a href="user.html?id=${post.id}" class="text-xs font-semibold text-white group-hover:underline decoration-brand-primary decoration-2 underline-offset-4">Read Review &rarr;</a>
+                                <a href="?id=${post.id}" class="text-xs font-semibold text-white group-hover:underline decoration-brand-primary decoration-2 underline-offset-4">Read Review &rarr;</a>
                             </div>
                         </div>
                     </article>
@@ -426,7 +431,7 @@
                     <div class="text-center py-32 space-y-6">
                         <h2 class="text-4xl font-bold text-white font-display">Post Not Found</h2>
                         <p class="text-brand-muted text-lg">The review you are looking for does not exist on ReelVidsHQ.</p>
-                        <a href="user.html" class="inline-block bg-brand-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-brand-primaryHover transition-colors shadow-lg shadow-brand-primary/20">← Back to Home</a>
+                        <a href="?" class="inline-block bg-brand-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-brand-primaryHover transition-colors shadow-lg shadow-brand-primary/20">← Back to Home</a>
                     </div>
                 `;
                 return;
@@ -459,7 +464,7 @@
                         <h3 class="text-2xl font-bold text-white mb-8 font-display">More like this on ReelVidsHQ</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                             ${related.map(rec => `
-                                <a href="user.html?id=${rec.id}" class="group block bg-brand-card rounded-xl overflow-hidden border border-brand-border hover:border-brand-primary/50 transition-all hover:-translate-y-1">
+                                <a href="?id=${rec.id}" class="group block bg-brand-card rounded-xl overflow-hidden border border-brand-border hover:border-brand-primary/50 transition-all hover:-translate-y-1">
                                     <div class="h-40 overflow-hidden bg-neutral-900 relative">
                                         <img src="${rec.thumbnailUrl}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                                         <div class="absolute bottom-2 right-2 bg-black/80 text-brand-primary text-xs font-bold px-2 py-1 rounded shadow">${rec.rating}</div>
@@ -482,7 +487,7 @@
             appContent.innerHTML = `
                 <!-- Back Link -->
                 <div class="mb-8">
-                    <a href="user.html" class="inline-flex items-center text-brand-muted hover:text-white transition-colors font-medium text-sm">
+                    <a href="?" class="inline-flex items-center text-brand-muted hover:text-white transition-colors font-medium text-sm">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                         Back to ReelVidsHQ Home
                     </a>
@@ -534,7 +539,7 @@
 
                     <!-- BOTTOM BACK LINK -->
                     <div class="mt-12 text-center">
-                        <a href="user.html" class="text-brand-muted hover:text-white text-sm underline decoration-neutral-700 hover:decoration-brand-primary underline-offset-4 transition-all">← Back to ReelVidsHQ Home</a>
+                        <a href="?" class="text-brand-muted hover:text-white text-sm underline decoration-neutral-700 hover:decoration-brand-primary underline-offset-4 transition-all">← Back to ReelVidsHQ Home</a>
                     </div>
                 </article>
             `;
